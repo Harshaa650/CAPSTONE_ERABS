@@ -16,16 +16,14 @@ import jwt  # PyJWT (pure python)
 from dotenv import load_dotenv
 
 load_dotenv()
-# Use SQLite for now - comment out to use PostgreSQL
-DATABASE_URL = "sqlite:///erabs.db"
-# DATABASE_URL = os.getenv("DATABASE_URL",
-#     "postgresql+psycopg://postgres:Harsha0909@localhost:5432/erabs")
+# Use PostgreSQL
+DATABASE_URL = "postgresql://erabs_user:securepassword@localhost/erabs"
 SECRET_KEY = os.getenv("SECRET_KEY", "erabs-dev-secret-change-me")
 ALGORITHM = "HS256"
 TOKEN_EXP_MIN = 60 * 24
 
-connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
-engine = create_engine(DATABASE_URL, connect_args=connect_args)
+# No special connection args needed for PostgreSQL
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 Base = declarative_base()
 oauth2 = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
